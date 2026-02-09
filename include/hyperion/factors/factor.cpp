@@ -168,8 +168,8 @@ auto Factor::maybeApplyLoss(Vector<>& residual, Matrix<>& jacobian) const -> std
 
 auto Factor::evaluate(const Scalar& parameter_tolerance, const Scalar& step_size) -> void {
   // Allocate memory.
-  Vector residual{residual_dim_};
-  Matrix jacobian{residual_dim_, tangent_dim_};
+  Vector<> residual(residual_dim_);
+  Matrix<> jacobian(residual_dim_, tangent_dim_);
   std::ranges::fill(jacobian_blocks_, nullptr);
   for (const auto& [node, ref, index, offset, dim] : gaussian_blocks_) {
     jacobian_blocks_[index] = jacobian.col(offset).data();
@@ -180,8 +180,8 @@ auto Factor::evaluate(const Scalar& parameter_tolerance, const Scalar& step_size
   const auto& [applied, energy] = maybeApplyLoss(residual, jacobian);
   energy_ = energy;
 
-  Vector eta = jacobian.transpose() * (-residual);
-  Matrix lambda = jacobian.transpose() * jacobian;
+  Vector<> eta = jacobian.transpose() * (-residual);
+  Matrix<> lambda = jacobian.transpose() * jacobian;
 
   // Evaluate the messages.
   Vector<> eta_prime = eta;

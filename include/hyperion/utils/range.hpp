@@ -199,7 +199,7 @@ template <Integral T>
 struct SamplingEvaluator<T> {
   template <typename TGenerator>
   static auto Sample(const TGenerator& generator, const T& lower_bound, const T& span) -> T {
-    std::uniform_real_distribution distribution(0, 1);
+    std::uniform_real_distribution<double> distribution(0, 1);
     return lower_bound + static_cast<T>(std::round(distribution(generator) * span()));
   }
 };
@@ -208,7 +208,7 @@ template <Float T>
 struct SamplingEvaluator<T> {
   template <typename TGenerator>
   static auto Sample(const TGenerator& generator, const T& lower_bound, const T& span) -> T {
-    std::uniform_real_distribution distribution(0, 1);
+    std::uniform_real_distribution<double> distribution(0, 1);
     return lower_bound + static_cast<T>(distribution(generator) * span());
   }
 };

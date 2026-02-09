@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
-project(hyperion VERSION 23.05.09 DESCRIPTION "" HOMEPAGE_URL https://github.com/VIS4ROB-lab/hyperion LANGUAGES CXX)
+project(hyperion VERSION 23.05.09 DESCRIPTION "" HOMEPAGE_URL https://github.com/VIS4ROB-lab/hyperion LANGUAGES CXX C)
 
-option(BUILD_TESTING "Builds the tests" ON)
+option(BUILD_TESTING "Builds the tests" OFF)
 option(BUILD_EXAMPLES "Builds the examples" ON)
 option(BUILD_BENCHMARKS "Builds the benchmarks" OFF)
 
@@ -12,6 +12,10 @@ if (PROJECT_IS_TOP_LEVEL)
 endif ()
 
 find_package(ament_cmake REQUIRED)
+
+# Ensure OpenMP is found for both C and CXX before Ceres
+# Required by SuiteSparse 7.x on macOS
+find_package(OpenMP COMPONENTS C CXX)
 
 find_package(absl REQUIRED)
 find_package(Ceres REQUIRED)
@@ -24,6 +28,8 @@ find_package(tf2_ros REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(fmt REQUIRED)
+find_package(Boost REQUIRED COMPONENTS container system)
+find_package(symforce REQUIRED)
 
 file(GLOB_RECURSE PROJECT_FILES CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/include/*.hpp ${PROJECT_SOURCE_DIR}/include/*.cpp)
 add_library(${PROJECT_NAME} STATIC ${PROJECT_FILES})
@@ -32,18 +38,19 @@ ament_export_libraries(${PROJECT_NAME}_export HAS_LIBRARY_TARGET)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-        "/usr/local/include/sym")
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 set(PROJECT_LIBRARIES
         absl::base
         absl::flat_hash_map
         absl::strings
+        Boost::container
+        Boost::system
         Ceres::ceres
         Eigen3::Eigen
         glog::glog
-        symforce_gen
-        symforce_opt
+        symforce::symforce_gen
+        symforce::symforce_opt
         yaml-cpp
         fmt::fmt
 )
