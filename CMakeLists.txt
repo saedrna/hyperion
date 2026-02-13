@@ -34,7 +34,7 @@ find_package(symforce REQUIRED)
 file(GLOB_RECURSE PROJECT_FILES CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/include/*.hpp ${PROJECT_SOURCE_DIR}/include/*.cpp)
 add_library(${PROJECT_NAME} STATIC ${PROJECT_FILES})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-ament_export_libraries(${PROJECT_NAME}_export HAS_LIBRARY_TARGET)
+ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
@@ -79,7 +79,7 @@ install(
 
 install(
         TARGETS ${PROJECT_NAME}
-        EXPORT ${PROJECT_NAME}_export
+        EXPORT ${PROJECT_NAME}
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
