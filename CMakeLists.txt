@@ -57,14 +57,17 @@ set(PROJECT_LIBRARIES
 
 set(PROJECT_DEPENDENCIES
         absl
+        Boost
         Ceres
         Eigen3
         glog
         nav_msgs
         rclcpp
         std_msgs
+        symforce
         tf2_ros
         visualization_msgs
+        yaml-cpp
         fmt
 )
 
